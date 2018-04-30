@@ -12,13 +12,13 @@ $conn = new mysqli($servername, $username, $password, $database);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-echo "Connected successfully";
+echo "Connected successfully\n";
 
 $url = 'https://www.strava.com/api/v3/athlete?access_token=c5d7635cf4b2b94fa48eb55794fc376214cd97d8';
 
 if (!function_exists('curl_init'))
     { 
-        die('CURL is not installed!');
+        die('CURL is not installed!\n');
     }
     
     $ch = curl_init();
