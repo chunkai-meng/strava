@@ -1,5 +1,5 @@
 <?php
-include 'vendor/autoload.php';
+include '../vendor/autoload.php';
 
 use Strava\API\OAuth;
 use Strava\API\Exception;
@@ -8,7 +8,7 @@ try {
     $options = [
         'clientId'     => 25225,
         'clientSecret' => '68ec92ec441b834fa248b397984a81cf462a8b7d',
-        'redirectUri'  => 'http://localhost:8000/1.php'
+        'redirectUri'  => 'http://mengc06.cpanel.unitec.ac.nz/sportanalysis/public/'
     ];
     $oauth = new OAuth($options);
 

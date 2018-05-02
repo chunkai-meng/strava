@@ -1,33 +1,109 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
+# Sport Analysis
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+> A platform better visualize you sport data  
+> Team Member:
 
-## About Laravel
+## Strava API Lib Usage
+- Derek find a very useful Strava PHP library and it's very easy to use:
+``` bash
+git clone https://github.com/basvandorst/StravaPHP.git
+composer install
+```
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as:
+- A sample PHP page:
+```php
+<?php
+include '../vendor/autoload.php';
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+use Strava\API\OAuth;
+use Strava\API\Exception;
+use Strava\API\Client;
+use Strava\API\Service\REST;
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications.
+try {
+    // **Change** blow parameters with your own APP value
+    $options = [
+        'clientId'     => 888888,
+        'clientSecret' => 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+        // **Change** here to redirect to the same page to post and receive the token.
+        'redirectUri'  => 'http://mengc06.cpanel.unitec.ac.nz/sportanalysis/public/'
+    ];
+    $oauth = new OAuth($options);
 
-## Learning Laravel
+    if (!isset($_GET['code'])) {
+        print '<a href="'.$oauth->getAuthorizationUrl([
+            // Uncomment required scopes.
+            'scope' => [
+                'public',
+                // 'write',
+                // 'view_private',
+            ]
+        ]).'"><img alt="Connect with Strava" src="/sportanalysis/public/img/ConnectToStrava.png"></a>';
+    } else {
+        $token = $oauth->getAccessToken('authorization_code', [
+            'code' => $_GET['code']
+        ]);
+        echo '<h4>';
+        print $token->getToken();
+        echo '</h4>';
+
+        try {
+            $adapter = new Pest('https://www.strava.com/api/v3');
+            $service = new REST($token, $adapter);  // Define your user token here.
+            $client = new Client($service);
+
+            // print out whatever you want.
+            echo "<br />";
+            $athlete = $client->getAthlete();
+            print_r($athlete);
+            echo "<br />";
+            $activities = $client->getAthleteActivities();
+            print_r($activities);
+            echo "<br />";
+            $club = $client->getClub(9729);
+            print_r($club);
+        } catch(Exception $e) {
+            print $e->getMessage();
+        }
+    }
+} catch(Exception $e) {
+    print $e->getMessage();
+}
+?>
+```
+
+- The OAuth Flow：
+    - Get method redirect customer to strava with client_id, redirect_uri, etc, but not client_secret
+    - customer is asked to logon Strava
+    - customer is asked to grant data access to our APP
+    - on success，strava redirect back to redirect_uri and exchange the temporary authorization code for an access token, using our client ID and client_secret [POST to https://www.strava.com/oauth/token]
+    - if success our server will receive a customer token
+    - then we can use this token in Strava API to collect customer data.
+
+## Action Plan:
+
+#### 1. User ID related ToDo List:
+![image](Sport%20Analyst.png)
+- [x] Register / Login
+- [x] Retrieve user token
+- [ ] Auto create user ID with user's Strava profile
+- [ ] Ask and save user password after connecting to strava
+
+### 2. Home Page and Segments
+- [ ] Show Dashboard
+
+
+
+
+## Other resource about Laravel
+
+#### Learning Laravel
 
 Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of any modern web application framework, making it a breeze to get started learning the framework.
 
 If you're not in the mood to read, [Laracasts](https://laracasts.com) contains over 1100 video tutorials on a range of topics including Laravel, modern PHP, unit testing, JavaScript, and more. Boost the skill level of yourself and your entire team by digging into our comprehensive video library.
 
-## Laravel Sponsors
+#### Laravel Sponsors
 
 We would like to extend our thanks to the following sponsors for helping fund on-going Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell):
 
@@ -45,14 +121,14 @@ We would like to extend our thanks to the following sponsors for helping fund on
 - [Runtime Converter](http://runtimeconverter.com/)
 - [WebL'Agence](https://weblagence.com/)
 
-## Contributing
+#### Contributing
 
 Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-## Security Vulnerabilities
+#### Security Vulnerabilities
 
 If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
-## License
+#### License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
