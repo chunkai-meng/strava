@@ -83,7 +83,7 @@ try {
 ## Action Plan:
 
 #### 1. User ID related ToDo List:
-![image](Sport%20Analyst.png)
+![image](readme_asset/Sport%20Analyst.png)
 - [x] Register / Login
 - [x] Retrieve user token
 - [ ] Auto create user ID with user's Strava profile
