@@ -11,10 +11,12 @@
 |
 */
 
-//Route::get('/', function () {
-//    return view('welcome');
-//});
+Route::get('/logout', function () {
+    return view('welcome');
+});
 
 Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/','StravaController@strava');
+
+Route::get('/','StravaController@strava_auth');
+Route::get('/user','StravaController@find_user');

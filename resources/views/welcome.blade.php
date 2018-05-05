@@ -81,7 +81,11 @@
                 <div class="title m-b-md">
                     Hi Strava! I'm Sport Analyst.
                 </div>
-                <?php echo $strava_link ?>
+
+                @if (isset($strava_link))
+                    <a href={{ $strava_link }}><img alt="Connect with Strava1" src="/img/ConnectToStrava.png"></a>
+                @endif
+
                 <div class="links">
                     <a href="https://www.strava.com">Strava</a>
                     {{--<a href="https://laracasts.com">Laracasts</a>--}}

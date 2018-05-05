@@ -15,14 +15,20 @@ use Strava\API\Service\REST;
 
 class StravaController extends Controller
 {
-    public function strava(){
-        $token = $this->strava_auth();
-        if ($token){
-            print $token;
+    private function create_user(User $user){
+        $if_exist = false;
+
+        if (is_null(User::where('email', $user->email) -> first())){
+            $user->save();
+        } else {
+            $if_exist = true;
         }
+
+        Auth::login($user);
+        return $if_exist;
     }
 
-    private function strava_auth(){
+    public function strava_auth(){
         try {
             $options = [
                 'clientId'     => env("CLIENT_ID"),
@@ -32,14 +38,14 @@ class StravaController extends Controller
             $oauth = new OAuth($options);
 
             if (!isset($_GET['code'])) {
-                $strava_link = '<a href="'.$oauth->getAuthorizationUrl([
+                $strava_link = $oauth->getAuthorizationUrl([
                         // Uncomment required scopes.
                         'scope' => [
                             'public',
                             // 'write',
                             // 'view_private',
                         ]
-                    ]).'"><img alt="Connect with Strava1" src="/img/ConnectToStrava.png"></a>';
+                    ]);
 
                 return view('welcome', ['strava_link'=> $strava_link]);
             } else {
@@ -57,11 +63,9 @@ class StravaController extends Controller
                     $user->name = $athlete["username"];
                     $user->email = $athlete["email"];
                     $user->password = bcrypt("123");
-                    $user->save();
-                    Auth::login($user);
-                    print_r($athlete);
-                    return view('home', ['token' => $token, 'username'=>$athlete["username"], 'email'=>$athlete["email"]]);
 
+                    $if_exist = $this->create_user($user);
+                    return view('home', ['athlete'=>$athlete, 'if_exist'=>$if_exist]);
                 } catch(Exception $e) {
                     print $e->getMessage();
                 }

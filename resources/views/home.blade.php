@@ -14,17 +14,20 @@
                         </div>
                     @endif
 
-                    You are logged in!
-                    <br>
+                    @if ($if_exist)
+                        <h4>Hello, welcome back!</h4>
+                    @else
+                        <h4>We already created a new ID for you!</h4>
+                    @endif
 
-                    <?php
-                        echo "<h3>Token :</h3>" . $token . "<br>";
-                        echo "<h4>Name: </h4>" . $username . "<br>";
-                        echo "<h4>Email: </h4>" . $email . "<br>";
-                        echo "<h4>City: </h4>" . $city . "<br>";
-                        echo "<h4>Country: </h4>" . $country . "<br>";
-                        echo "<h4>Create At: </h4>" . $created_at . "<br>";
-                    ?>
+                    <h5> You are logged in! </h5><br>
+
+                    @foreach ($athlete as $k=>$v)
+                        @if (is_array($v))
+                            @continue
+                        @endif
+                            <li><b>{{ $k }}</b> : {{ $v }}</li>
+                    @endforeach
                 </div>
             </div>
         </div>
