@@ -81,65 +81,7 @@
                 <div class="title m-b-md">
                     Hi Strava! I'm Sport Analyst.
                 </div>
-                    <a href="/user/strava-login" title="Connect with Strava">
-
-<?php
-include '../vendor/autoload.php';
-
-use Strava\API\OAuth;
-use Strava\API\Exception;
-use Strava\API\Client;
-use Strava\API\Service\REST;
-
-try {
-    $options = [
-        'clientId'     => 25225,
-        'clientSecret' => '68ec92ec441b834fa248b397984a81cf462a8b7d',
-        'redirectUri'  => 'http://mengc06.cpanel.unitec.ac.nz/sportanalysis/public/'
-    ];
-    $oauth = new OAuth($options);
-
-    if (!isset($_GET['code'])) {
-        print '<a href="'.$oauth->getAuthorizationUrl([
-            // Uncomment required scopes.
-            'scope' => [
-                'public',
-                // 'write',
-                // 'view_private',
-            ]
-        ]).'"><img alt="Connect with Strava" src="/sportanalysis/public/img/ConnectToStrava.png"></a>';
-    } else {
-        $token = $oauth->getAccessToken('authorization_code', [
-            'code' => $_GET['code']
-        ]);
-        echo '<h4>';
-        print $token->getToken();
-        echo '</h4>';
-
-        try {
-//            $token = '1aaa15b17163e597c6c491b5284aa40c775d935d';
-            $adapter = new Pest('https://www.strava.com/api/v3');
-            $service = new REST($token, $adapter);  // Define your user token here.
-            $client = new Client($service);
-
-            echo "<br />";
-            $athlete = $client->getAthlete();
-            print_r($athlete);
-            echo "<br />";
-            $activities = $client->getAthleteActivities();
-            print_r($activities);
-            echo "<br />";
-            $club = $client->getClub(9729);
-            print_r($club);
-        } catch(Exception $e) {
-            print $e->getMessage();
-        }
-    }
-} catch(Exception $e) {
-    print $e->getMessage();
-}
-?>
-                </a>
+                <?php echo $strava_link ?>
                 <div class="links">
                     <a href="https://www.strava.com">Strava</a>
                     {{--<a href="https://laracasts.com">Laracasts</a>--}}

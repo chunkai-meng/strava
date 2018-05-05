@@ -15,6 +15,16 @@
                     @endif
 
                     You are logged in!
+                    <br>
+
+                    <?php
+                        echo "<h3>Token :</h3>" . $token . "<br>";
+                        echo "<h4>Name: </h4>" . $username . "<br>";
+                        echo "<h4>Email: </h4>" . $email . "<br>";
+                        echo "<h4>City: </h4>" . $city . "<br>";
+                        echo "<h4>Country: </h4>" . $country . "<br>";
+                        echo "<h4>Create At: </h4>" . $created_at . "<br>";
+                    ?>
                 </div>
             </div>
         </div>

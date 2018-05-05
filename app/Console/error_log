@@ -1,0 +1,2 @@
+[30-Apr-2018 10:23:53 UTC] PHP Fatal error:  Class 'Illuminate\Foundation\Console\Kernel' not found in /home/mengc06/public_html/sportanalysis/app/Console/Kernel.php on line 8
+[30-Apr-2018 10:24:00 UTC] PHP Fatal error:  Class 'Illuminate\Foundation\Console\Kernel' not found in /home/mengc06/public_html/sportanalysis/app/Console/Kernel.php on line 8
